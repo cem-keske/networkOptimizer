@@ -4,40 +4,32 @@ A little helper for the online game **[fluxcontrol.eu](https://fluxcontrol.eu)**
 
 In the game you're running a small electricity grid. Some power lines are
 **overloaded** (carrying more than they can handle), and your job is to fix that
-as **cheaply as possible** by turning each power station up or down.
+as **cheaply as possible** by turning each power station up or down, and connecting or disconnecting some power lines.
 
-This tool does the hard maths for you. You copy a level out of the game, run one
-command, and it tells you exactly how much to change each station — the cheapest
-possible answer. You then type those numbers back into the game.
-
-You do **not** need to be a programmer to use it. Just follow the steps below.
+This tool does the hard maths for you, and tells you the cheapest possible way to remove the congestion.
+You copy a level out of the game, run one command, and it tells you exactly how much to change each station, or which lines
+to connect or disconnect.
 
 ---
 
-## What you need first (one-time setup)
+## Requirements
 
-You only ever do this once.
-
-1. **Install Python** — download it from [python.org](https://www.python.org/downloads/)
-   and run the installer. On Windows, tick **"Add Python to PATH"** during install.
-2. **Install Gurobi** — the maths engine this tool uses. Get the free licence at
+1. **Python** — you can get it from [python.org](https://www.python.org/downloads/)
+   
+2. **Gurobi** — required to solve the optimization problem. Get the free licence at
    [gurobi.com](https://www.gurobi.com/) (it's free for students and academics),
-   then install it.
+   
 3. **Download this tool** — click the green **Code** button on the GitHub page →
-   **Download ZIP** → unzip it somewhere easy to find, like your Desktop.
 
 That's the setup. Now the fun part.
 
 ---
 
-## How to use it (every time you play)
-
-The whole thing is 5 short steps.
+## How to use it 
 
 ### Step 1 — Add the "Export" button to your browser (one time)
 
-Open a terminal (on Windows: search for **PowerShell**), go into the tool's
-folder, and run:
+Open a terminal, go into the tool's folder, and run:
 
 ```
 python solve_level.py --bookmarklet
@@ -53,16 +45,14 @@ Now add it as a bookmark in your browser:
 - **URL / Address:** paste the `javascript:...` line you copied.
 - Save.
 
-You now have an **Export FluxControl** button in your browser. This is a
-one-time thing — it stays there forever.
+You now have an **Export FluxControl** button in your browser. 
 
 ### Step 2 — Grab the level from the game
 
 1. Open **fluxcontrol.eu** and start the level you want to solve.
 2. Click your **Export FluxControl** bookmark.
 
-Your browser downloads a small file called something like `level1.json` into
-your **Downloads** folder. That file is just the puzzle, saved.
+Your browser downloads a small file called something like `levelX.json`. That file is just the puzzle, saved.
 
 ### Step 3 — Solve it
 
@@ -70,13 +60,9 @@ Back in the terminal, run this (adjust the file name/location to match what got
 downloaded):
 
 ```
-python solve_level.py "C:\Users\YourName\Downloads\level1.json" --no-switching
+python solve_level.py "C:\Users\YourName\Downloads\levelX.json"
 ```
-
-> **Tip:** The `--no-switching` part matters. It tells the tool to only turn
-> power stations up and down — the exact kind of change the game lets you make.
-> Leave it off and the tool may suggest disconnecting a line, which the game
-> won't accept.
+*You can add a few options here too:
 
 ### Step 4 — Read the answer
 
@@ -122,35 +108,13 @@ Done! The overload is cleared at the lowest possible cost.
 
 ---
 
-## Quick reference
-
-| I want to...                                | Type this                                             |
-| ------------------------------------------- | ----------------------------------------------------- |
-| Set up the Export button (one time)         | `python solve_level.py --bookmarklet`                 |
-| Solve a downloaded level (game-friendly)    | `python solve_level.py level1.json --no-switching`    |
-| Try it right away with the included example | `python solve_level.py level1.json --no-switching`    |
-
 There's an example level, `level1.json`, already included — so you can try that
 last command straight away, before touching the game.
 
 ---
 
-## Common hiccups
+## For the curious
 
-- **"python is not recognised"** — Python isn't installed, or "Add to PATH"
-  wasn't ticked. Reinstall Python and tick that box.
-- **The Export bookmark does nothing** — make sure a level is actually loaded and
-  visible in the game before you click it.
-- **Something about a Gurobi licence** — Gurobi isn't installed or activated. See
-  the free-licence link in the setup section above.
-- **The numbers won't "Confirm" in the game** — double-check you entered every UP
-  and DN exactly; the game only accepts the solution when everything balances.
-
----
-
-## For the curious (optional)
-
-Under the hood this solves a **DC optimal power flow** problem: it finds the
+Under the hood this solves a **DC optimal power flow** problem with on/off constraints: it finds the
 cheapest change to power injections that keeps every line within its limit, using
-the standard linear ("DC") approximation of how power flows through a grid. The
-optimisation is handled by Gurobi. You don't need to know any of that to use it.
+the standard linear ("DC") approximation of how power flows through a grid. https://link.springer.com/content/pdf/bbm:978-3-642-17989-1/1.pdf
