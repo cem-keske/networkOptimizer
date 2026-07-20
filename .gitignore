@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Not part of the import/solve/plot workflow
+make_guide_pdf.py
+FluxControl_Solver_Guide.pdf
+examples.py
