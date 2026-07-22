@@ -12,7 +12,7 @@ remove the congestion. You copy a level out of the game, run one command, and it
 tells you exactly how much to change each station, or which lines to connect or
 disconnect.
 
-![The solver showing a level before and after: the overloaded red line on the left is switched off on the right, clearing the congestion at zero cost.](docs/solver_screenshot.png)
+![The solver on a 6-node level. Left: one line (red) is overloaded. Right: the cheapest fix, switching one line off and adjusting a couple of stations, clears the overload for 71.77 EUR.](docs/solver_screenshot.png)
 
 ---
 
@@ -35,7 +35,7 @@ That is the setup. Now the fun part.
 Open a terminal, go into the tool's folder, and run:
 
 ```
-python solve_level.py --bookmarklet
+python grid_solver.py --bookmarklet
 ```
 
 It prints a long line starting with `javascript:...`. Copy the one under
@@ -64,7 +64,7 @@ Back in the terminal, run this (adjust the file name and location to match what
 got downloaded):
 
 ```
-python solve_level.py "C:\Users\YourName\Downloads\levelX.json"
+python grid_solver.py "C:\Users\YourName\Downloads\levelX.json"
 ```
 
 You can add a few options here too:

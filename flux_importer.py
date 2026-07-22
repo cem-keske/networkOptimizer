@@ -6,7 +6,7 @@ Converts fluxcontrol.eu game data into a Network instance ready for solve_flux_c
 Typical workflow
 ----------------
 1. Open fluxcontrol.eu and load a level.
-2. Click the bookmarklet (see BOOKMARKLET below, or run: python solve_level.py --bookmarklet).
+2. Click the bookmarklet (see BOOKMARKLET below, or run: python grid_solver.py --bookmarklet).
    → The current level's network JSON is copied to your clipboard.
 3. In Python / a notebook:
 
@@ -22,7 +22,7 @@ Field mapping (game → Network)
   nodes[id].injection      → power0
   nodes[id].cost_increase  → cost_up
   nodes[id].cost_decrease  → cost_down
-  nodes[id].x / .y         → node_pos  (Three.js y-up, matches matplotlib directly)
+  nodes[id].x / .y         → node_pos  (screen y-down; y is negated for plotting)
   lines[id].limit          → power_limit
   lines[id].from_node /
            .to_node        → line endpoints  (node names "N{id}")
@@ -71,9 +71,10 @@ def from_dict(data: dict) -> Network:
             cost_down = nd["cost_decrease"],
             name      = name,
         )
-        # Game stores positions in Three.js world coords (y-up convention),
-        # which already matches matplotlib's y-up axis — no flip needed.
-        net.node_pos[name] = (nd["x"], nd["y"])
+        # Game stores positions in screen/canvas pixels (y-down: y grows
+        # downward). Matplotlib is y-up, so negate y to keep the plot in the
+        # same orientation as the game instead of mirrored top-to-bottom.
+        net.node_pos[name] = (nd["x"], -nd["y"])
 
     # --- lines ---------------------------------------------------------------
     for line_id, ln in lines_raw.items():
@@ -193,7 +194,7 @@ def _read_clipboard() -> str:
 
 # BOOKMARKLET_DOWNLOAD  — triggers a browser "Save As" for network.json.
 # Recommended: drag this to your bookmarks bar, click it on the game page,
-# save the file somewhere, then run:  python solve_level.py path/to/network.json
+# save the file somewhere, then run:  python grid_solver.py path/to/network.json
 BOOKMARKLET_DOWNLOAD = (
     "javascript:(function(){"
     "var raw=sessionStorage.getItem('network');"
@@ -211,15 +212,15 @@ BOOKMARKLET_DOWNLOAD = (
 
 # BOOKMARKLET_COPY  — tries navigator.clipboard, then falls back to showing
 # the JSON in a prompt box the user can Ctrl+A / Ctrl+C from.
-# After copying, run:  python solve_level.py
+# After copying, run:  python grid_solver.py
 BOOKMARKLET_COPY = (
     "javascript:(function(){"
     "var raw=sessionStorage.getItem('network');"
     "if(!raw){alert('No network data — load a level first.');return;}"
-    "function fallback(){window.prompt('Copy this JSON, then run: python solve_level.py',raw);}"
+    "function fallback(){window.prompt('Copy this JSON, then run: python grid_solver.py',raw);}"
     "if(navigator.clipboard&&navigator.clipboard.writeText){"
     "navigator.clipboard.writeText(raw).then("
-    "function(){alert('Copied to clipboard!\\nRun: python solve_level.py');},"
+    "function(){alert('Copied to clipboard!\\nRun: python grid_solver.py');},"
     "fallback);"
     "}else{fallback();}"
     "})();"

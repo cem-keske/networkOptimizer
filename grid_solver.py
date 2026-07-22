@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 """
-solve_level.py
+grid_solver.py
 --------------
 One-shot FluxControl level solver.
 
 Usage
 -----
   # Normal use: click bookmarklet on the game page, then:
-  python solve_level.py
+  python grid_solver.py
 
   # Load from a saved JSON file instead of clipboard:
-  python solve_level.py path/to/level.json
+  python grid_solver.py path/to/level.json
 
   # Disable line switching (LP instead of MILP):
-  python solve_level.py --no-switching
+  python grid_solver.py --no-switching
 
   # Print the bookmarklet URLs (drag to your bookmarks bar):
-  python solve_level.py --bookmarklet
+  python grid_solver.py --bookmarklet
 """
 
 import sys
@@ -88,10 +88,10 @@ if __name__ == "__main__":
         print("\n--- DOWNLOAD bookmarklet (recommended) ---")
         print("Drag this URL to your bookmarks bar.")
         print("Clicking it saves a level<N>.json file -- then run:")
-        print("  python solve_level.py level<N>.json\n")
+        print("  python grid_solver.py level<N>.json\n")
         print(BOOKMARKLET_DOWNLOAD)
         print("\n--- COPY bookmarklet (clipboard fallback) ---")
-        print("Clicking it copies the JSON; then run:  python solve_level.py\n")
+        print("Clicking it copies the JSON; then run:  python grid_solver.py\n")
         print(BOOKMARKLET_COPY)
         sys.exit(0)
 

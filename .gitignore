@@ -13,8 +13,3 @@ env/
 # OS
 Thumbs.db
 .DS_Store
-
-# Not part of the import/solve/plot workflow
-make_guide_pdf.py
-FluxControl_Solver_Guide.pdf
-examples.py
