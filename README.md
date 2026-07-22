@@ -30,51 +30,36 @@ That is the setup. Now the fun part.
 
 ## How to use it
 
-### Step 1: Add the "Export" button to your browser (one time)
+### Step 1: Set up the "Export" button (one time)
 
-Open a terminal, go into the tool's folder, and run:
+Follow **[Appendix A](#appendix-a-setting-up-the-export-button)** to create a
+button that copies the current level to your clipboard (as JSON) whenever you
+click it in the game. It takes a minute, and you only ever do it once.
 
-```
-python grid_solver.py --bookmarklet
-```
-
-It prints a long line starting with `javascript:...`. Copy the one under
-**"DOWNLOAD bookmarklet"**.
-
-Now add it as a bookmark in your browser:
-
-- Right-click your bookmarks bar and choose **Add page** (or **New bookmark**).
-- **Name:** anything, for example `Export FluxControl`.
-- **URL / Address:** paste the `javascript:...` line you copied.
-- Save.
-
-You now have an **Export FluxControl** button in your browser.
-
-### Step 2: Grab the level from the game
+### Step 2: Copy the level from the game
 
 1. Open **fluxcontrol.eu** and start the level you want to solve.
-2. Click your **Export FluxControl** bookmark.
+2. Click your **Export** button.
 
-Your browser downloads a small file called something like `levelX.json`. That
-file is just the puzzle, saved.
+The level is now on your clipboard. Nothing visible happens on the page, and
+that is fine.
 
 ### Step 3: Solve it
 
-Back in the terminal, run this (adjust the file name and location to match what
-got downloaded):
+Back in the terminal, run:
 
 ```
-python grid_solver.py "C:\Users\YourName\Downloads\levelX.json"
+python grid_solver.py
 ```
 
-You can add a few options here too:
+With no file name, the tool reads the level straight from your clipboard and
+solves it.
+
+You can add an option too:
 
 - `--no-switching` solves using only station up and down changes, without
   connecting or disconnecting any lines. Use this if you want a solution that
   keeps the grid wiring exactly as it is.
-- If you leave out the file name entirely, the tool reads the level straight from
-  your clipboard instead. This works with the "COPY bookmarklet" (the other line
-  printed in Step 1), which copies the level instead of downloading a file.
 
 ### Step 4: Read the answer
 
@@ -120,8 +105,12 @@ Done. The overload is cleared at the lowest possible cost.
 
 ---
 
-There is an example level, `level1.json`, already included, so you can try that
-last command straight away before touching the game.
+An example level, `level1.json`, is included, so you can try the solver right
+away without the game:
+
+```
+python grid_solver.py level1.json
+```
 
 ---
 
@@ -134,3 +123,37 @@ power flows through a grid. For background, see Zhu's
 *Optimization of Power System Operation* [[ref]][opf-ref].
 
 [opf-ref]: https://link.springer.com/content/pdf/bbm:978-3-642-17989-1/1.pdf
+
+---
+
+## Appendix A: Setting up the Export button
+
+The Export button is a *bookmarklet*: a browser bookmark that runs a tiny script
+instead of opening a web page. This one reads whatever level the game currently
+has loaded and copies it to your clipboard, so you can hand it to the solver.
+
+To create it:
+
+1. Open a terminal, go into the tool's folder, and run:
+
+   ```
+   python grid_solver.py --bookmarklet
+   ```
+
+2. It prints two long lines that start with `javascript:...`. Copy the one under
+   **"COPY bookmarklet"** (this is the one that copies to the clipboard).
+3. In your browser, right-click the bookmarks bar and choose **Add page**
+   (or **New bookmark**).
+4. **Name:** anything, for example `Export FluxControl`.
+   **URL / Address:** paste the `javascript:...` line you copied. Then save.
+
+You now have an **Export** button on your bookmarks bar. Click it on any loaded
+level to copy that level to your clipboard, then continue from Step 2 above.
+
+**Prefer a file instead of the clipboard?** The other printed line,
+**"DOWNLOAD bookmarklet"**, saves the level as `levelX.json` in your Downloads
+folder rather than copying it. In that case, pass the file to the solver:
+
+```
+python grid_solver.py "C:\Users\YourName\Downloads\levelX.json"
+```
